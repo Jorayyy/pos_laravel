@@ -27,7 +27,16 @@
                 @forelse($owners as $owner)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-3 font-medium">
-                        <a href="{{ route('admin.owners.show', $owner) }}" class="text-blue-600 hover:underline">{{ $owner->full_name }}</a>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full border border-gray-200 overflow-hidden bg-gray-50 flex-shrink-0">
+                                @if($owner->photo_url)
+                                    <img src="{{ $owner->photo_url }}" alt="{{ $owner->full_name }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-400 font-semibold text-xs bg-emerald-50 text-emerald-600">{{ strtoupper(substr($owner->full_name, 0, 1)) }}</div>
+                                @endif
+                            </div>
+                            <a href="{{ route('admin.owners.show', $owner) }}" class="text-blue-600 hover:underline">{{ $owner->full_name }}</a>
+                        </div>
                     </td>
                     <td class="px-4 py-3 text-gray-500">{{ $owner->contact_number ?? '-' }}</td>
                     <td class="px-4 py-3 text-gray-500">{{ $owner->email ?? '-' }}</td>

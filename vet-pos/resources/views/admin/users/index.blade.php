@@ -26,7 +26,18 @@
             <tbody class="divide-y divide-gray-100">
                 @forelse($users as $user)
                 <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3 font-medium">{{ $user->name }}</td>
+                    <td class="px-4 py-3 font-medium">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full border border-gray-200 overflow-hidden bg-gray-50 flex-shrink-0">
+                                @if($user->photo_url)
+                                    <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-500 font-semibold text-xs bg-gray-100">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                                @endif
+                            </div>
+                            <span>{{ $user->name }}</span>
+                        </div>
+                    </td>
                     <td class="px-4 py-3 text-gray-500">{{ $user->email }}</td>
                     <td class="px-4 py-3"><span class="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{{ $user->role->name ?? 'No role' }}</span></td>
                     <td class="px-4 py-3 text-center">

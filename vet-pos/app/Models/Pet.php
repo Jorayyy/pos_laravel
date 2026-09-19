@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 
-#[Fillable(['owner_id', 'name', 'species', 'breed', 'sex', 'birthdate', 'color', 'weight', 'microchip_number', 'notes'])]
+#[Fillable(['owner_id', 'name', 'photo', 'species', 'breed', 'sex', 'birthdate', 'color', 'weight', 'microchip_number', 'notes'])]
 #[Hidden([])]
 class Pet extends Model
 {
@@ -54,5 +54,14 @@ class Pet extends Model
         }
 
         return $query->where('species', $species);
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        if ($this->photo && \Storage::disk('public')->exists($this->photo)) {
+            return \Storage::url($this->photo);
+        }
+
+        return null;
     }
 }

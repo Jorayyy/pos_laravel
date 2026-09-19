@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 
-#[Fillable(['full_name', 'contact_number', 'email', 'address', 'notes'])]
+#[Fillable(['full_name', 'photo', 'contact_number', 'email', 'address', 'notes'])]
 #[Hidden([])]
 class Owner extends Model
 {
@@ -36,5 +36,14 @@ class Owner extends Model
               ->orWhere('contact_number', 'like', "%{$search}%")
               ->orWhere('email', 'like', "%{$search}%");
         });
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        if ($this->photo && \Storage::disk('public')->exists($this->photo)) {
+            return \Storage::url($this->photo);
+        }
+
+        return null;
     }
 }

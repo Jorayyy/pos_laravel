@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role_id', 'is_active'])]
+#[Fillable(['name', 'email', 'photo', 'password', 'role_id', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -64,5 +64,14 @@ class User extends Authenticatable
             $q->where('name', 'like', "%{$search}%")
               ->orWhere('email', 'like', "%{$search}%");
         });
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        if ($this->photo && \Storage::disk('public')->exists($this->photo)) {
+            return \Storage::url($this->photo);
+        }
+
+        return null;
     }
 }

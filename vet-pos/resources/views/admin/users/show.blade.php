@@ -10,6 +10,13 @@
         </div>
     </div>
     <div class="bg-white rounded-lg border border-gray-200 p-6">
+        @if($user->photo_url)
+            <div class="mb-4 rounded-full overflow-hidden border border-gray-200 w-20 h-20">
+                <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+            </div>
+        @else
+            <div class="mb-4 w-20 h-20 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500 font-bold text-xl">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+        @endif
         <dl class="space-y-3 text-sm">
             <div><dt class="text-gray-500">Email</dt><dd>{{ $user->email }}</dd></div>
             <div><dt class="text-gray-500">Role</dt><dd><span class="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{{ $user->role->name ?? 'No role' }}</span></dd></div>

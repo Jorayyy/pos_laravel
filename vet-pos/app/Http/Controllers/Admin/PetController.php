@@ -39,6 +39,7 @@ class PetController extends Controller
         $validated = $request->validate([
             'owner_id' => 'required|exists:owners,id',
             'name' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048',
             'species' => 'required|string|max:100',
             'breed' => 'nullable|string|max:100',
             'sex' => 'nullable|string|in:male,female',
@@ -48,6 +49,10 @@ class PetController extends Controller
             'microchip_number' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('pets', 'public');
+        }
 
         DB::transaction(function () use ($validated) {
             $pet = Pet::create($validated);
@@ -77,6 +82,7 @@ class PetController extends Controller
         $validated = $request->validate([
             'owner_id' => 'required|exists:owners,id',
             'name' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048',
             'species' => 'required|string|max:100',
             'breed' => 'nullable|string|max:100',
             'sex' => 'nullable|string|in:male,female',
@@ -86,6 +92,13 @@ class PetController extends Controller
             'microchip_number' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
+
+        if ($request->hasFile('photo')) {
+            if ($pet->photo && \Storage::disk('public')->exists($pet->photo)) {
+                \Storage::disk('public')->delete($pet->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('pets', 'public');
+        }
 
         DB::transaction(function () use ($pet, $validated) {
             $old = $pet->only(array_keys($validated));
@@ -100,6 +113,9 @@ class PetController extends Controller
     public function destroy(Pet $pet)
     {
         DB::transaction(function () use ($pet) {
+            if ($pet->photo && \Storage::disk('public')->exists($pet->photo)) {
+                \Storage::disk('public')->delete($pet->photo);
+            }
             AuditLogHelper::log('deleted', $pet, $pet->toArray(), null);
             $pet->delete();
         });

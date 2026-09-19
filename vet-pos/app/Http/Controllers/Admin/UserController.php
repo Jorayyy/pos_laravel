@@ -35,6 +35,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
+            'photo' => 'nullable|image|max:2048',
             'password' => 'required|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id',
             'is_active' => 'boolean',
@@ -69,10 +70,18 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'photo' => 'nullable|image|max:2048',
             'password' => 'nullable|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id',
             'is_active' => 'boolean',
         ]);
+
+        if ($request->hasFile('photo')) {
+            if ($user->photo && \Storage::disk('public')->exists($user->photo)) {
+                \Storage::disk('public')->delete($user->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('users', 'public');
+        }
 
         DB::transaction(function () use ($user, $validated) {
             $old = $user->only(['name', 'email', 'role_id', 'is_active']);
@@ -98,6 +107,9 @@ class UserController extends Controller
         }
 
         DB::transaction(function () use ($user) {
+            if ($user->photo && \Storage::disk('public')->exists($user->photo)) {
+                \Storage::disk('public')->delete($user->photo);
+            }
             AuditLogHelper::log('deleted', $user, $user->toArray(), null);
             $user->delete();
         });

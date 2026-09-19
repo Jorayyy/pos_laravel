@@ -17,6 +17,13 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="bg-white rounded-lg border border-gray-200 p-6">
+        @if($owner->photo_url)
+            <div class="mb-4 rounded-full overflow-hidden border border-gray-200 w-24 h-24">
+                <img src="{{ $owner->photo_url }}" alt="{{ $owner->full_name }}" class="w-full h-full object-cover">
+            </div>
+        @else
+            <div class="mb-4 w-24 h-24 rounded-full bg-emerald-50 border border-gray-200 flex items-center justify-center text-emerald-600 font-bold text-2xl">{{ strtoupper(substr($owner->full_name, 0, 1)) }}</div>
+        @endif
         <h2 class="font-semibold mb-4">Contact Information</h2>
         <dl class="space-y-2 text-sm">
             <div><dt class="text-gray-500">Contact</dt><dd>{{ $owner->contact_number ?? '-' }}</dd></div>

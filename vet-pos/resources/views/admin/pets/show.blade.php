@@ -17,6 +17,11 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="bg-white rounded-lg border border-gray-200 p-6">
+        @if($pet->photo_url)
+            <div class="mb-4 rounded-full overflow-hidden border border-gray-200 w-24 h-24">
+                <img src="{{ $pet->photo_url }}" alt="{{ $pet->name }}" class="w-full h-full object-cover">
+            </div>
+        @endif
         <h2 class="font-semibold mb-4">Pet Information</h2>
         <dl class="space-y-2 text-sm">
             <div><dt class="text-gray-500">Owner</dt><dd><a href="{{ route('admin.owners.show', $pet->owner) }}" class="text-blue-600 hover:underline">{{ $pet->owner->full_name }}</a></dd></div>

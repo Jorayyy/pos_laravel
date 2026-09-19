@@ -30,15 +30,19 @@ class OwnerController extends Controller
     {
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048',
             'contact_number' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string',
         ]);
 
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('owners', 'public');
+        }
+
         DB::transaction(function () use ($validated) {
             $owner = Owner::create($validated);
-
             AuditLogHelper::log('created', $owner, null, $validated);
         });
 
@@ -62,16 +66,23 @@ class OwnerController extends Controller
     {
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048',
             'contact_number' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string',
         ]);
 
+        if ($request->hasFile('photo')) {
+            if ($owner->photo && \Storage::disk('public')->exists($owner->photo)) {
+                \Storage::disk('public')->delete($owner->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('owners', 'public');
+        }
+
         DB::transaction(function () use ($owner, $validated) {
             $old = $owner->only(array_keys($validated));
             $owner->update($validated);
-
             AuditLogHelper::log('updated', $owner, $old, $validated);
         });
 
@@ -82,6 +93,9 @@ class OwnerController extends Controller
     public function destroy(Owner $owner)
     {
         DB::transaction(function () use ($owner) {
+            if ($owner->photo && \Storage::disk('public')->exists($owner->photo)) {
+                \Storage::disk('public')->delete($owner->photo);
+            }
             AuditLogHelper::log('deleted', $owner, $owner->toArray(), null);
             $owner->delete();
         });
