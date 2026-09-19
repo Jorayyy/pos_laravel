@@ -1,58 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# VetPOS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Veterinary clinic management and point-of-sale system built with Laravel 13. Handles pet owner records, pet profiles, product inventory, vet services, POS transactions, and business reporting in a single dashboard.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Backend:** Laravel 13, PHP 8.3
+- **Frontend:** Blade, Livewire 4, Alpine.js, Tailwind CSS v4
+- **Database:** SQLite (switchable to PostgreSQL/MySQL)
+- **PDF:** DomPDF
+- **Font:** Plus Jakarta Sans
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **POS** — Livewire-powered cart with product search, quantity adjust, service line items, cash/change calculation, and one-click checkout
+- **Product Management** — SKU, barcode, categories, brands, stock levels, reorder alerts, expiration tracking, photo uploads
+- **Service Management** — Vet services with categories and pricing
+- **Pet & Owner Records** — Owner profiles linked to pets with breed, vaccination dates, and medical notes
+- **Inventory Tracking** — Stock movements logged on every sale, adjustment, and restock with full audit trail
+- **Sales History** — Filterable transaction list with receipt view
+- **Reports** — Daily, weekly, monthly sales; sales by product, service, cashier; low stock; expiring products; inventory summary; veterinary services report
+- **RBAC** — Role-based access control (admin, manager, cashier, vet staff) with per-route middleware
+- **User Management** — Create, edit, deactivate staff accounts
+- **Audit Logs** — Track all CRUD actions with user, IP, and timestamp
+- **Settings** — Clinic name, address, phone, tax rate, receipt footer
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Setup
 
 ```bash
-composer require laravel/boost --dev
+# Clone
+git clone https://github.com/Jorayyy/pos_laravel.git
+cd pos_laravel/vet-pos
 
-php artisan boost:install
+# Install
+composer install
+npm install
+
+# Environment
+cp .env.example .env
+php artisan key:generate
+
+# Database
+php artisan migrate
+php artisan db:seed
+
+# Storage
+php artisan storage:link
+
+# Build assets
+npm run build
+
+# Run
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Login
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Email | Password | Role |
+|-------|----------|------|
+| admin@vetpos.com | password | Admin |
+| maria@vetpos.com | password | Manager |
+| juan@vetpos.com | password | Cashier |
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT
